@@ -1,5 +1,12 @@
 from django.db import models
 
+CHOICES = (
+    ('Gray', 'Серый'),
+    ('Black', 'Чёрный'),
+    ('White', 'Белый'),
+    ('Ginger', 'Рыжий'),
+    ('Mixed', 'Смешанный'),
+)
 
 class Owner(models.Model):
     first_name = models.CharField(max_length=128)
@@ -19,7 +26,7 @@ class Achievement(models.Model):
 
 class Cat(models.Model):
     name = models.CharField(max_length=16)
-    color = models.CharField(max_length=16)
+    color = models.CharField(max_length=16, choices=CHOICES)
     birth_year = models.IntegerField()
     owner = models.ForeignKey(
         Owner, on_delete=models.CASCADE,
@@ -37,6 +44,9 @@ class Cat(models.Model):
 class AchievementCat(models.Model):
     achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
     cat = models.ForeignKey(Cat, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('achievement', 'cat')
 
     def __str__(self):
         return f'{self.achievement} {self.cat}'
